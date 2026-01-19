@@ -60,7 +60,7 @@ def print_details(data):
         print(f"ISP        : {data['isp']}")
         print(f"Lat/Lon    : {data['lat']}, {data['lon']}")
     else:
-        print(f"❌ Error: {data.get('message', 'Invalid IP or Host')}")
+        print(f"❌ Error: {data.get('message', 'You Entered a Wrong IP Brother')}")
 
 # --- OPTION 2: TRACK EXISTING LINK ---
 
@@ -97,12 +97,12 @@ def grab_ip():
 
 def start_grabber_server():
     global TARGET_GITHUB
-    TARGET_GITHUB = input("Enter the destination link (e.g., your GitHub repo URL): ")
+    TARGET_GITHUB = input("Enter the destination link (e.g. instagram.com ): ")
     if not TARGET_GITHUB.startswith('http'):
         TARGET_GITHUB = 'https://' + TARGET_GITHUB
     
     print("\n🚀 IP Grabber is starting...")
-    print("⚠️  To make this public, run 'ngrok http 5000' in a separate terminal.")
+    print("⚠️  To make this a public link contact developer.")
     print("❌ Press CTRL+C to stop the server and return to menu.\n")
     
     # Run the Flask server
@@ -133,7 +133,7 @@ if __name__ == "__main__":
             except KeyboardInterrupt:
                 print("\nServer stopped. Returning to menu...")
         elif choice == '4':
-            print("Goodbye!")
+            print("See You Soon Brother!")
             break
         else:
             print("Invalid selection.")
