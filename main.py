@@ -25,7 +25,7 @@ def show_splash():
     # The Information Box
     print(f"  ┌─────────────────────────────────────────┐")
     print(f"  │     {GREEN}Github.com/Anymshacker047           │")
-    print(f"  │                                         │")
+    print(f"  │    {BOLD} IP-LOCATOR                    │")
     print(f"  │       {BOLD}SUBMITTED BY :-                   │")
     print(f"  │        MANAS DHINGRA                    │")
     print(f"  │       SANJAY SANWARIYA                  │")
