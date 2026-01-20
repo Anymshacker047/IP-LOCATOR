@@ -34,7 +34,7 @@ def show_splash():
     
 if __name__ == "__main__":
     show_splash()
-    import requests
+import requests
 import socket
 import datetime
 from urllib.parse import urlparse
