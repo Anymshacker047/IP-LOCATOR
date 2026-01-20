@@ -70,7 +70,7 @@ def track_link_and_redirect():
         link = 'https://' + link
     try:
         hostname = urlparse(link).hostname
-        print(f"🔍 Resolving Host: {hostname}")
+        print(f" Resolving Host: {hostname}")
         ip_address = socket.gethostbyname(hostname)
         data = get_location_data(ip_address)
         print_details(data)
