@@ -52,7 +52,7 @@ def get_location_data(ip):
 
 def print_details(data):
     if data.get("status") == "success":
-        print("\n📍 IP Location Details:")
+        print("\n IP Location Details:")
         print(f"IP Address : {data['query']}")
         print(f"Country    : {data['country']}")
         print(f"Region     : {data['regionName']}")
