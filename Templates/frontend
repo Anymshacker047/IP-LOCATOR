@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>IP Locator</title>
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="main">
+
+<h1 class="glow">IP LOCATOR</h1>
+
+<form method="POST">
+
+<input type="text" name="ip" placeholder="ENTER TARGET IP">
+<button type="submit">TRACE</button>
+
+</form>
+
+{% if data %}
+
+<div class="result">
+
+<p>IP : {{data.query}}</p>
+<p>COUNTRY : {{data.country}}</p>
+<p>CITY : {{data.city}}</p>
+<p>ISP : {{data.isp}}</p>
+<p>LAT : {{data.lat}}</p>
+<p>LON : {{data.lon}}</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<script src="/static/hacker.js"></script>
+
+</body>
+</html>
